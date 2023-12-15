@@ -1,39 +1,35 @@
 <?php
 
-	require "mail.php";
-	include('header.php');
-	check_login();
+require "mail.php";
+include('header.php');
+check_login();
 
-	$errors = array();
+$errors = array();
 
-	if($_SERVER['REQUEST_METHOD'] == "GET" && !check_verified()){
+if ($_SERVER['REQUEST_METHOD'] == "GET" && !check_verified()) {
 
-		$query = "select * from verify where email = :email";
-			$vars = array();
-			$vars['email'] = $_SESSION['USER']->email;
+	$query = "select * from verify where email = :email";
+	$vars = array();
+	$vars['email'] = $_SESSION['USER']->email;
 
-			$verification = database_run($query,$vars);
-		//send email
-		$vars['code'] =  rand(10000,99999);
+	$verification = database_run($query, $vars);
+	//send email
+	$vars['code'] =  rand(10000, 99999);
 
-		//save to database
-		$vars['expires'] = (time() + (60 * 10));
-		$vars['email'] = $_SESSION['USER']->email;
-		$query = ""; 
-		if(!$verification)
-		{
-		    $query = "insert into verify (code,expires,email) values (:code,:expires,:email)";
-		   
-		}
-		else
-		{
-			$query = "Update verify set code = :code,expires=:expires  Where email =:email";
-		}
+	//save to database
+	$vars['expires'] = (time() + (60 * 10));
+	$vars['email'] = $_SESSION['USER']->email;
+	$query = "";
+	if (!$verification) {
+		$query = "insert into verify (code,expires,email) values (:code,:expires,:email)";
+	} else {
+		$query = "Update verify set code = :code,expires=:expires  Where email =:email";
+	}
 
-		database_run($query,$vars);
-		$message = "your code is " . $vars['code'];
+	database_run($query, $vars);
+	$message = "your code is " . $vars['code'];
 
-        $message = "<!DOCTYPE html>
+	$message = "<!DOCTYPE html>
 		<html>
 		
 		<head>
@@ -177,7 +173,7 @@
 											<td bgcolor='#ffffff' align='center' style='padding: 20px 30px 60px 30px;'>
 												<table border='0' cellspacing='0' cellpadding='0'>
 													<tr>
-														<td align='center' style='border-radius: 3px;' bgcolor='#FFA73B'><a href='#' target='_blank' style='font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;'>" .$vars['code']."</a></td>
+														<td align='center' style='border-radius: 3px;' bgcolor='#FFA73B'><a href='#' target='_blank' style='font-size: 20px; font-family: Helvetica, Arial, sans-serif; color: #ffffff; text-decoration: none; color: #ffffff; text-decoration: none; padding: 15px 25px; border-radius: 2px; border: 1px solid #FFA73B; display: inline-block;'>" . $vars['code'] . "</a></td>
 													</tr>
 												</table>
 											</td>
@@ -232,83 +228,76 @@
 		
 		</html>";
 
-		$subject = "Email verification";
-		$recipient = $vars['email'];
-		send_mail($recipient,$subject,$message);
-	}
+	$subject = "Email verification";
+	$recipient = $vars['email'];
+	send_mail($recipient, $subject, $message);
+}
 
-	if($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-		if(!check_verified()){
+	if (!check_verified()) {
 
-			$query = "select * from verify where code = :code && email = :email";
-			$vars = array();
-			$vars['email'] = $_SESSION['USER']->email;
-			$vars['code'] = $_POST['code'];
+		$query = "select * from verify where code = :code && email = :email";
+		$vars = array();
+		$vars['email'] = $_SESSION['USER']->email;
+		$vars['code'] = $_POST['code'];
 
-			$row = database_run($query,$vars);
+		$row = database_run($query, $vars);
 
-			if(is_array($row)){
-				$row = $row[0];
-				$time = time();
+		if (is_array($row)) {
+			$row = $row[0];
+			$time = time();
 
-				if($row->expires > $time){
+			if ($row->expires > $time) {
 
-					$id = $_SESSION['USER']->Id;
-					$query = "update users set email_verified = email where Id = '$id' limit 1";
-					
-					database_run($query);
+				$id = $_SESSION['USER']->Id;
+				$query = "update users set email_verified = email where Id = '$id' limit 1";
 
-					header("Location: profile.php");
-					die;
-				}else{
-					echo "Code expired";
-				}
+				database_run($query);
 
-			}else{
-				echo "wrong code";
+				header("Location: profile.php");
+				die;
+			} else {
+				echo "Code expired";
 			}
-		}else{
-			echo "You're already verified";
+		} else {
+			echo "wrong code";
 		}
+	} else {
+		echo "You're already verified";
 	}
+}
 
 ?>
-		<section style="background-color: #eee;">
-        <div class="container py-5">
-		<div class="row">
-      <div class="col">
-        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
-          <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="#">Confirm Email Address</a></li>
-          </ol>
-        </nav>
-      </div>
-    </div>
+
+<div class="container py-5">
+	<div class="row">
+		<div class="col">
+			<nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+				<ol class="breadcrumb mb-0">
+					<li class="breadcrumb-item"><a href="#">Confirm Email Address</a></li>
+				</ol>
+			</nav>
+		</div>
+	</div>
 	<br><br>
- 	<div>
-	 <div class="alert alert-warning" role="alert">
-	 <h1 class="warning">an email was sent to your address. paste the code from the email here</h1>
-     </div>
+	<div>
+		<div class="alert alert-warning" role="alert">
+			<h1 class="warning">an email was sent to your address. paste the code from the email here</h1>
+		</div>
 		<div>
-			<?php if(count($errors) > 0):?>
-				<?php foreach ($errors as $error):?>
-					<?= $error?> <br>	
-				<?php endforeach;?>
-			<?php endif;?>
+			<?php if (count($errors) > 0) : ?>
+				<?php foreach ($errors as $error) : ?>
+					<?= $error ?> <br>
+				<?php endforeach; ?>
+			<?php endif; ?>
 
 		</div><br>
 		<form method="post">
 			<div class="mb-3">
-			<label for="exampleFormControlInput1" class="form-label">Verification Code</label>
-			<input ttype="text"  class="form-control  col-md-4" id="exampleFormControlInput1" name="code" placeholder="Enter your Code" placeholder="12345">
-			</div>			
+				<label for="exampleFormControlInput1" class="form-label">Verification Code</label>
+				<input ttype="text" class="form-control  col-md-4" id="exampleFormControlInput1" name="code" placeholder="Enter your Code" placeholder="12345">
+			</div>
 			<input type="submit" class="btn btn-success" value="Verify">
 		</form>
-	</div>
-				</section>
-	</div>
-	
-
-</body>
-</html>
+		<?php include('footer.php');
