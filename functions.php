@@ -154,3 +154,13 @@ function load_pages()
 	}
 	return $pages;
 }
+
+function load_settings()
+{
+	$query = "select * from settings limit 1";
+	$settings = database_run($query);
+	if (is_array($settings)) {
+		$settings = $settings[0];
+	}
+	return $settings;
+}
