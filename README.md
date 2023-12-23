@@ -1,7 +1,7 @@
 # Development configuration
 
--Clone/download the zip file from github
--Change the mysql connection in function.php file
+- Clone/download the zip file from github
+- Change the mysql connection in function.php file
 
 `
 function database_run($query, $vars = array())
