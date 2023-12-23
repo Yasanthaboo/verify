@@ -18,14 +18,14 @@ $mail = new PHPMailer;
 $mail->isSMTP(); 
 $mail->Host = 'smtp.gmail.com';           // Specify main and backup SMTP servers 
 $mail->SMTPAuth = true;                     // Enable SMTP authentication 
-$mail->Username = 'thusharaweerasingha@gmail.com';       // SMTP username 
-$mail->Password = 'ptefxbdteehqvwvs';         // SMTP password 
+$mail->Username = 'xxxxxxxxxxxxxxxxxxxxx@gmail.com';       // SMTP username 
+$mail->Password = 'xxxxxxxxxxxxx';         // SMTP password 
 $mail->SMTPSecure = 'ssl';                  // Enable TLS encryption, `ssl` also accepted 
 $mail->Port = 465;                          // TCP port to connect to 
  
 // Sender info 
-$mail->setFrom('thusharaweerasingha@gmail.com', 'SenderName',0); 
-$mail->addReplyTo('thusharaweerasingha@gmail.com', 'SenderName'); 
+$mail->setFrom('xxxxxxxxxx@gmail.com', 'SenderName',0); 
+$mail->addReplyTo('xxxxxxxxxx@gmail.com', 'SenderName'); 
  
 // Add a recipient 
 $mail->addAddress($recipient); 

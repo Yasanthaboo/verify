@@ -3,7 +3,6 @@
 include('header.php');
 check_login();
 ?>
-<!-- <section style="background-color: #eee;"> -->
 <div class="container py-5">
   <div class="row">
     <div class="col">
@@ -183,10 +182,5 @@ check_login();
           </div>
         </div>
       </div>
-      <!-- </div>
-    </div>
-  </div>
-</section>
-</body>
-</html> -->
+
       <?php include('footer.php'); ?>
